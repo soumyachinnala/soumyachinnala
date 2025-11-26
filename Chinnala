@@ -74,3 +74,233 @@
   <script src="script.js"></script>
 </body>
 </html> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Report Lost or Found Item</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Report Lost / Found Item</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="search.html">Search</a>
+    </nav>
+  </header>
+
+  <section class="form-container">
+    <form id="reportForm">
+      <label>Item Name:</label>
+      <input type="text" id="itemName" required>
+
+      <label>Category:</label>
+      <select id="category">
+        <option>Electronics</option>
+        <option>Books</option>
+        <option>Clothing</option>
+        <option>Accessories</option>
+        <option>Other</option>
+      </select>
+
+      <label>Date Lost/Found:</label>
+      <input type="date" id="date">
+
+      <label>Description:</label>
+      <textarea id="description" rows="3" placeholder="Enter details..."></textarea>
+
+      <label>Upload Image (optional):</label>
+      <input type="file" id="image">
+
+      <button type="submit">Submit Report</button>
+    </form>
+  </section>
+
+  <footer>
+    <p>Data will be verified by the Admin before listing.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Lost Items</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Search Lost Items</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="report.html">Report</a>
+    </nav>
+  </header>
+
+  <section class="search-box">
+    <input type="text" id="searchInput" placeholder="Enter item name or keyword...">
+    <button onclick="searchItems()">Search</button>
+  </section>
+
+  <section id="results" class="results"></section>
+
+  <footer>
+    <p>Search results are based on verified reports.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Admin Dashboard</h1>
+  </header>
+
+  <section class="admin-panel">
+    <h3>Pending Reports</h3>
+    <div id="adminList"></div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f2f7ff;
+  color: #222;
+}
+
+header {
+  background-color: #003366;
+  color: white;
+  padding: 15px 0;
+  text-align: center;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+
+nav ul li {
+  margin: 0 15px;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.section {
+  padding: 40px 10%;
+  background: white;
+  margin: 30px auto;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.section h2 {
+  color: #003366;
+  margin-bottom: 10px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+input, textarea, select {
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+button {
+  background-color: #0066cc;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  background-color: #004d99;
+}
+
+#results {
+  margin-top: 20px;
+}
+
+footer {
+  background-color: #003366;
+  color: white;
+  text-align: center;
+  padding: 15px;
+  margin-top: 40px;
+}
+const reportForm = document.getElementById('reportForm');
+const reportMessage = document.getElementById('reportMessage');
+const searchInput = document.getElementById('searchInput');
+const resultsDiv = document.getElementById('results');
+
+let items = [];
+
+reportForm.addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  const item = {
+    type: document.getElementById('type').value,
+    name: document.getElementById('itemName').value,
+    description: document.getElementById('description').value,
+    date: document.getElementById('date').value,
+    contact: document.getElementById('contact').value
+  };
+
+  items.push(item);
+  reportMessage.textContent = "✅ Item reported successfully!";
+  reportForm.reset();
+});
+
+searchInput.addEventListener('keyup', function() {
+  const query = searchInput.value.toLowerCase();
+  const filtered = items.filter(i => 
+    i.name.toLowerCase().includes(query) || 
+    i.type.toLowerCase().includes(query)
+  );
+
+  resultsDiv.innerHTML = filtered.length 
+    ? filtered.map(i => `
+        <div class="item-card">
+          <h3>${i.name} (${i.type})</h3>
+          <p>${i.description}</p>
+          <p><strong>Date:</strong> ${i.date}</p>
+          <p><strong>Contact:</strong> ${i.contact}</p>
+        </div>
+      `).join('')
+    : "<p>No matching items found.</p>";
+});
+
+function scrollToSection(id) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+}
